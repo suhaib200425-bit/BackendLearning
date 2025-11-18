@@ -1,10 +1,12 @@
 const express = require('express');
-const { register,getfun } = require('../Controller/UserController.js');
+const { register,getfun,login } = require('../Controller/UserController.js');
+const authMiddleware = require('../Middleware/Auth.js');
 
 const UserRoute = express.Router();
 
 
 UserRoute.post('/register',register)
-UserRoute.get('/',getfun)
+UserRoute.post('/login',login)
+UserRoute.get('/',authMiddleware,getfun)
 
 module.exports =UserRoute;
