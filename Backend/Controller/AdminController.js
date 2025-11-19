@@ -14,45 +14,49 @@ exports.adminregister = async (req, res) => {
                 password: hashedPassword,
             })
             const Live = await AdminModel.findOne({ email: req.body.email });
-            !Live?await admin.save():res.json({status: false,message: "Admin Existed",})
-            res.json({status: true,message: "Admin Registion Successful",});
+            !Live ? await admin.save() : res.json({ status: false, message: "Admin Existed", })
+            res.json({ status: true, message: "Admin Registion Successful", });
         } else res.json({ status: false, message: 'Body Is Not Read' })
 
     } catch (err) { res.json({ status: false, message: err }) }
 
 }
 
-exports.adminlogin=async(req,res)=>{
+exports.adminlogin = async (req, res) => {
     try {
-            if (req.body) {
-                const { email, password } = req.body
-                const Live = await AdminModel.findOne({ email: email });
-                if (Live) {
-                    const IsMatch = bcrypt.compare(password, Live.password);
-                    if (!IsMatch) res.json({ status: false, message: 'Login Faild' })
-                    const token = jwt.sign(
-                        {
-                            id: Live._id,
-                            email: email
-                        },
-                        'ADMIN_JWT_SECRET',
-                        { expiresIn: 60 }
-                    );
-                    res.json({
-                        status: true,
-                        message: "Admin Login successful",
-                        token: token,
-                    });
-                }
-                else res.json({ status: false, message: 'Admin Is Not Register' })
+        if (req.body) {
+            const { email, password } = req.body
+            const Live = await AdminModel.findOne({ email: email });
+            if (Live) {
+                const IsMatch = bcrypt.compare(password, Live.password);
+                if (!IsMatch) res.json({ status: false, message: 'Login Faild' })
+                const token = jwt.sign(
+                    {
+                        id: Live._id,
+                        email: email
+                    },
+                    'ADMIN_JWT_SECRET',
+                    { expiresIn: 60 }
+                );
+                res.json({
+                    status: true,
+                    message: "Admin Login successful",
+                    token: token,
+                });
             }
+            else res.json({ status: false, message: 'Admin Is Not Register' })
         }
-        catch (err) {
-            res.json({ status: false, message: err })
-        }
+    }
+    catch (err) {
+        res.json({ status: false, message: err })
+    }
 }
 
 exports.getadmin = async (req, res) => {
-    const User = await AdminModel.findOne({ email: req.user.email, _id: req.user.id });
-    res.json(User)
+    try {
+        const User = await AdminModel.findOne({ email: req.user.email, _id: req.user.id });
+        res.json({status:true,message:'UserExist'})
+    } catch (err) {
+        res.json({ status: false, message: 'Sorry', Error: err })
+    }
 }

@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const authMiddleware = (SECRET) => {
     return (req, res, next) => {
         const token = req.headers.authorization?.split(" ")[1];
-        console.log(req.headers.authorization);
         if (!token) return res.json({ status: false, message: "No token provided" });
 
         try {
