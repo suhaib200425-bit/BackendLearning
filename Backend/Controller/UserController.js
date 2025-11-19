@@ -1,4 +1,4 @@
-const UserModel = require("../Models/UserModel")
+const UserModel = require("../Models/UserModel.js")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 exports.register = async (req, res) => {
@@ -49,16 +49,16 @@ exports.login = async (req, res) => {
             if (Live) {
                 const IsMatch = bcrypt.compare(password, Live.password);
                 if (!IsMatch) res.json({ status: false, message: 'Login Faild' })
-                const token =  jwt.sign(
+                const token = jwt.sign(
                     {
-                        id:Live._id,
-                        email:email
+                        id: Live._id,
+                        email: email
                     },
-                    'Suhaib_JWT_SECRET',
+                    'USER_JWT_SECRET',
                     { expiresIn: 60 }
                 );
                 res.json({
-                    status:true,
+                    status: true,
                     message: "Login successful",
                     token: token,
                 });
@@ -67,12 +67,12 @@ exports.login = async (req, res) => {
         }
     }
     catch (err) {
-
+        res.json({ status: false, message: err })
     }
 }
 
 exports.getfun = async (req, res) => {
     console.log(req.user);
-    const User = await UserModel.findOne({email:req.user.email,_id:req.user.id});
+    const User = await UserModel.findOne({ email: req.user.email, _id: req.user.id });
     res.json(User)
 }
