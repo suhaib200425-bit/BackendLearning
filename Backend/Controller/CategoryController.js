@@ -1,15 +1,16 @@
-const BannerModel = require("../Models/BannerModel")
+
+const CategoryModel =require('../Models/CategoryModel.js')
 const fs = require("fs");
 
-exports.addbanner = async (req, res) => {
+exports.addCategory = async (req, res) => {
     try {
         if (req.body) {
-            const Banner = BannerModel({
+            const Category = CategoryModel({
                 admin_id: req.body.user,
                 category: req.body.category,
                 image: req.file.filename
             })
-            await Banner.save()
+            await Category.save()
             res.json({ status: true, message: "Banner Added Successful", })
         } else {
             res.json({ status: false, message: 'Body Not Available' })
@@ -18,25 +19,25 @@ exports.addbanner = async (req, res) => {
         res.json({ status: false, message: 'Error' })
     }
 }
-exports.getbanner = async (req, res) => {
-    const Item = await BannerModel.find()
+exports.getCategory = async (req, res) => {
+    const Item = await CategoryModel.find()
     if (Item.length == 0) res.json({ status: false, message: "Banners Is Not Available" })
     res.json({ status: true, Item })
 
 }
 
-exports.deletebanner = async (req, res) => {
+exports.deleteCategory = async (req, res) => {
     try {
-        const banner = await BannerModel.findById(req.params.id);
-        if (!banner) return res.status(404).json({ status: false, message: "Banner not found" });
+        const Category = await CategoryModel.findById(req.params.id);
+        if (!Category) return res.status(404).json({ status: false, message: "Banner not found" });
 
         // Delete file from folder
-        fs.unlink(`uploads/${banner.image}`, (err) => {
+        fs.unlink(`uploads/${Category.image}`, (err) => {
             if (err) console.log("File already deleted or not found");
         });
 
         // Delete from DB
-        await BannerModel.findByIdAndDelete(req.params.id);
+        await CategoryModel.findByIdAndDelete(req.params.id);
 
         res.json({ status: true, message: "Banner deleted successfully" });
 
@@ -45,7 +46,7 @@ exports.deletebanner = async (req, res) => {
     }
 }
 
-exports.updatebanner = async (req, res) => {
+exports.updateCategory = async (req, res) => {
     try {
         const userId = req.params.id;
         // const imageupdate= req.body.image?req.file.filename:''
@@ -54,25 +55,25 @@ exports.updatebanner = async (req, res) => {
             ...req.body
         } : { ...req.body }
         
-        const DATA = await BannerModel.findById(userId);
+        const DATA = await CategoryModel.findById(userId);
         fs.unlink(`uploads/${DATA.image}`, (err) => {
             if (err) console.log("File already deleted or not found");
         });
 
-        const updatedBanner = await BannerModel.findByIdAndUpdate(
+        const updatedCategory = await CategoryModel.findByIdAndUpdate(
             userId,
             UpdateObj,
             { new: true } // returns updated data
         );
 
-        if (!updatedBanner) {
+        if (!updatedCategory) {
             return res.status(404).json({ msg: "Banner not found" });
         }
 
         res.json({
             status: true,
             msg: "Banner updated successfully",
-            response: updatedBanner
+            response: updatedCategory
         });
 
 

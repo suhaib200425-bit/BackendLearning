@@ -1,9 +1,8 @@
 const mongoose = require("mongoose")
 
-const Banner = new mongoose.Schema({
+const Category = new mongoose.Schema({
     admin_id: String,
     category: String,
     image: String,
 });
-
-module.exports = mongoose.model("Banner", Banner);
+module.exports = mongoose.model("Category", Category);

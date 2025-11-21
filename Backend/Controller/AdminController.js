@@ -36,7 +36,7 @@ exports.adminlogin = async (req, res) => {
                         email: email
                     },
                     'ADMIN_JWT_SECRET',
-                    { expiresIn: 60 }
+                    { expiresIn: '1d' }
                 );
                 res.json({
                     status: true,
@@ -55,7 +55,7 @@ exports.adminlogin = async (req, res) => {
 exports.getadmin = async (req, res) => {
     try {
         const User = await AdminModel.findOne({ email: req.user.email, _id: req.user.id });
-        res.json({status:true,message:'UserExist'})
+        res.json({status:true,message:'UserExist',User})
     } catch (err) {
         res.json({ status: false, message: 'Sorry', Error: err })
     }

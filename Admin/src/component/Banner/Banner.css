@@ -1,0 +1,49 @@
+.imageBox{
+    height: 200px;
+    width: 300px;
+}
+.imageBox img{
+    height: 100%;
+    width: 100%;
+}
+#inputGroupSelect01{
+    height: 45px;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.select_value{
+    font-size: 18px;
+    font-weight: 500;
+    color: black;
+}
+
+
+/* display */
+.BannerDisplay{
+    height: 85vh;
+    scrollbar-width: none;
+    overflow-y: scroll;
+}
+.BannerDisplay .Image_Box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.BannerDisplay .Image_Box img{
+ height: 200px;
+ border-radius: 10px;
+ width: 100%;
+}
+.TopBar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+}
+.Botton_New_item{
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgba(230, 230, 230, 0.623);
+    font-weight: 600;
+}

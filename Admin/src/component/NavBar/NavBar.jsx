@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import './NavBar.css'
 import { Logo } from '../../assets/assets.js'
+import { useNavigate } from 'react-router-dom'
+import { Context } from '../../context/Context.jsx'
 function NavBar() {
+    const {setUser}=useContext(Context)
+    const navigate=useNavigate()
     return (
         <div className='NavBar'>
             <div className="NavBar_Logo">
@@ -14,6 +18,11 @@ function NavBar() {
                 <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
                 </svg>
+                <button className='p-2 LogOut'onClick={()=>{
+                    setUser({})
+                    localStorage.setItem("token", false);
+                    navigate('/auth')
+                }} >LogOut</button>
             </div>
         </div>
     )

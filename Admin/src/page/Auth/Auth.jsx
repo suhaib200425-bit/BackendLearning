@@ -4,7 +4,9 @@ import { AuthScreen } from '../../assets/assets.js'
 import { useState } from 'react'
 import axios from 'axios'
 import { BASEURL } from '../../variable/variables.js'
+import { useNavigate } from 'react-router-dom'
 function Auth() {
+    const navigate = useNavigate()
     const [Form, setForm] = useState(false)
     const [User, setUser] = useState({})
 
@@ -19,11 +21,13 @@ function Auth() {
             if (!Form) {
                 const res = await axios.post(`${BASEURL}/admin/login`, User)
                 res.status && localStorage.setItem("token", res.data.token);
+                res.status && navigate('/home')
                 console.log(res.data);
             } else {
                 if (User.password === User.confirm_password) {
                     const res = await axios.post(`${BASEURL}/admin/register`, User)
                     console.log(res.data);
+                    setForm(true)
                 } else alert('Password Is Not Matched')
             }
         } catch (err) {

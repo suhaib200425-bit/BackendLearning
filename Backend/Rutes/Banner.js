@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require("multer");
-const { addbanner, getbanner } = require('../Controller/BannerController');
+const { addbanner, getbanner, deletebanner, updatebanner } = require('../Controller/BannerController');
 
 const BannerRouter = express.Router();
 const storage = multer.diskStorage({
@@ -15,6 +15,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 BannerRouter.post('/upload',upload.single("image"),addbanner)
+BannerRouter.delete("/delete/:id", deletebanner);
+BannerRouter.patch("/update/:id",upload.single("image"),updatebanner );
 BannerRouter.get('/',getbanner)
+
 
 module.exports = BannerRouter;

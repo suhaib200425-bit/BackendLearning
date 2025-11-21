@@ -1,0 +1,22 @@
+.MainBox{
+    height: 90vh;
+}
+.MenuButtos{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.MenuButton{
+    color: white;
+    height: 45px;
+    border-radius: 10px;
+    font-size: 22px;
+    transition: 0.5s;
+    border: 2px solid white;
+    background: transparent;
+}
+.Active{
+    background-color: white;
+    color: black;
+    transition: 0.5s;
+}

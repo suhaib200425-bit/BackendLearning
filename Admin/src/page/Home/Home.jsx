@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import NavBar from '../../component/NavBar/NavBar'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import axios from 'axios'
 import { BASEURL } from '../../variable/variables'
+import MainBox from '../../component/LeftBox/MainBox'
+import { Context } from '../../context/Context'
+import Empty from '../../component/Empty/Empty'
 
 
 function Home() {
-    const [user, setuser] = useState({})
+    const { User,setUser } = useContext(Context)
     useEffect(() => {
         const Loading = async () => {
             const token = localStorage.getItem("token");
@@ -16,18 +19,22 @@ function Home() {
                     Authorization: `Bearer ${token}`
                 }
             })
-            setTimeout(() => {
-                console.log(res.data);
-                setuser(res.data)
-            }, 3000)
+            setUser(res.data.User) 
+            console.log(res.data.User);
+            
         }
         Loading()
     }, [])
     return (
         <div className='container'>
-            <NavBar />
             {
-                user && <h1>{user.message}</h1>
+                User ?
+                    <>
+                        <NavBar />
+                        <MainBox />
+                    </>:
+                    <Empty />
+
             }
         </div>
     )
