@@ -5,9 +5,7 @@ const fs = require("fs");
 exports.addproduct = async (req, res) => {
     try {
         if (req.body) {
-            console.log(req);
             const imageurls = req.files?.map(file => file.filename)
-            console.log(imageurls)
             const Product = ProductModel({
                 admin_id: req.body.user,
                 category: req.body.category,
@@ -53,4 +51,23 @@ exports.deleteproduct = async (req, res) => {
     } catch (err) {
         res.json({ status: false, message: err.message });
     }
+}
+
+exports.updateproduct = async (req, res) => {
+    const imageurls = req.files?.map(file => file.filename)
+    const docid=req.params.id
+    const Product = await ProductModel.findById(docid);
+    if (!Product) return res.status(404).json({ status: false, message: "Product not found" });
+
+    const UpdateObj = imageurls ? {
+        image: [...Product.image,...imageurls],
+        ...req.body
+    } : { ...req.body }
+    const updatedBanner = await ProductModel.findByIdAndUpdate(
+        docid,
+        UpdateObj,
+        { new: true } // returns updated data
+    );
+
+    return res.status(200).json({ status: true, message: "Product is founded", item: updatedBanner })
 }

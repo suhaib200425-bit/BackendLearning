@@ -12,6 +12,7 @@ function Product() {
   const [Product, setProduct] = useState({})
   const [AllProduct, setAllProduct] = useState([])
   const [PAGE, setPAGE] = useState(false)
+  const [UPDATE, setUPDATE] = useState(false)
   const { User } = useContext(Context)
   useEffect(() => {
     const dataread = async () => {
@@ -36,7 +37,11 @@ function Product() {
     setProduct({ ...Product, [event.target.name]: event.target.value, user: User._id })
   }
 
+  const HandleUpdate = async (event) => {
+    event.preventDefault();
+    console.log(Product);
 
+  }
 
 
   const HandleSubmit = async (event) => {
@@ -51,13 +56,24 @@ function Product() {
       formData.append("description", Product.description);
       formData.append("user", Product.user);
 
-      Product.images.forEach(file => {
+      Product.images?.forEach(file => {
         formData.append("images", file);
       });
+      let res
+      if (!UPDATE) {
+        res = await axios.post(`${BASEURL}/product/upload`, formData, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
+        console.log(res.data);
+      } else {
+        res = await axios.patch(`${BASEURL}/product/update/${Product.UPDATEID}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
+        res.data.status&&setUPDATE(false)
+        setPAGE(!PAGE)
+        console.log('UPDATE',res.data);
+      }
 
-      const res = await axios.post(`${BASEURL}/product/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
       if (res.data.status) {
         setProduct({})
         setImageurls([])
@@ -80,14 +96,30 @@ function Product() {
   const deleteproduct = async (docid) => {
 
     const res = await axios.delete(`${BASEURL}/product/delete/${docid}`, {
-        headers: { "Content-Type": "multipart/form-data" }
-      })
-      if(res.data.status){
-        const filtered = AllProduct.filter(item => item._id !== docid);
-        setAllProduct(filtered)
-      }
-      console.log(res.data);
-      
+      headers: { "Content-Type": "multipart/form-data" }
+    })
+    if (res.data.status) {
+      const filtered = AllProduct.filter(item => item._id !== docid);
+      setAllProduct(filtered)
+    }
+    console.log(res.data);
+
+  }
+  const updateproduct = async (element) => {
+    setUPDATE(true)
+    const URLS = element.image.map(elem => `${BASEURL}/image/${elem}`)
+    setImageurls(URLS)
+    setProduct({
+      name: element.name,
+      category: element.category,
+      price: element.price,
+      description: element.description,
+      user:User._id,
+      UPDATEID: element._id
+    })
+
+    setPAGE(false)
+    console.log(element);
   }
   return (
     <div className='Product'>
@@ -95,6 +127,9 @@ function Product() {
         <h4>Product</h4>
         <button className='Botton_New_item' onClick={() => {
           setPAGE(!PAGE)
+          setUPDATE(false)
+          setImageurls([])
+          setProduct({})
         }}>Add Item</button>
       </div>
       {
@@ -142,11 +177,11 @@ function Product() {
             <form className="row" onSubmit={(e) => HandleSubmit(e)}>
               <div className="col-4 mt-2">
                 <label htmlFor="">Name</label> <br />
-                <input value={Product.name?Product.name:''} onChange={(e) => Handlechange(e)} className=' col-11 inputproduct_details' type="text" name='name' required placeholder='Product Name' />
+                <input value={Product.name ? Product.name : ''} onChange={(e) => Handlechange(e)} className=' col-11 inputproduct_details' type="text" name='name' required placeholder='Product Name' />
               </div>
               <div className="col-4 mt-2">
                 <label htmlFor="">Category</label> <br />
-                <select value={Product.category?Product.category:''} onChange={(e) => Handlechange(e)} className="form-select select_value" id="inputGroupSelect01" name='category' >
+                <select value={Product.category ? Product.category : ''} onChange={(e) => Handlechange(e)} className="form-select select_value" id="inputGroupSelect01" name='category' >
                   <option selected>Chooce...</option>
                   <option value="IPhone">IPhone</option>
                   <option value="Mac Book">Mac Book</option>
@@ -158,14 +193,14 @@ function Product() {
               </div>
               <div className="col-4 mt-2">
                 <label htmlFor="">Price</label> <br />
-                <input value={Product.price?Product.price:''} onChange={(e) => Handlechange(e)} className=' col-11 inputproduct_details' type="number" name='price' required placeholder='Product Price' />
+                <input value={Product.price ? Product.price : ''} onChange={(e) => Handlechange(e)} className=' col-11 inputproduct_details' type="number" name='price' required placeholder='Product Price' />
               </div>
               <div className="col-8 mt-2">
                 <label htmlFor="">Description</label> <br />
-                <textarea value={Product.description?Product.description:''} onChange={(e) => Handlechange(e)} required placeholder='Description' style={{ height: '150px', width: '100%' }} name="description" id="description" className='p-3'></textarea>
+                <textarea value={Product.description ? Product.description : ''} onChange={(e) => Handlechange(e)} required placeholder='Description' style={{ height: '150px', width: '100%' }} name="description" id="description" className='p-3'></textarea>
               </div>
               <div className="col-12 mt-2">
-                <button type='submit' className="col-4 btn bg-primary " style={{ color: 'white' }}>Upload Product</button>
+                <button type='submit' className="col-4 btn bg-primary " style={{ color: 'white' }}>{UPDATE ? 'Update' : 'Upload'} Product</button>
               </div>
             </form>
           </>
