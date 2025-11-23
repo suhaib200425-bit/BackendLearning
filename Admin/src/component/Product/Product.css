@@ -1,0 +1,77 @@
+.ImgaeUploaded {
+    height: 250px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    scrollbar-width: none;
+    gap: 10px;
+
+}
+
+.ImgaeUploaded div {
+    background-color: rgba(221, 217, 212, 0.87);
+    border-radius: 10px;
+    height: 200px;
+    min-width: 170px;
+    padding: 5px;
+    max-width: 170px;
+}
+
+.ImgaeUploaded div img{
+    height: 100%;
+    border-radius: 10px;
+    width: 100%;
+}
+.inputproduct_details ,textarea{
+    height: 45px;
+    padding-left: 10px;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+
+.productrow{
+    overflow-y: scroll;
+    height: 78vh;
+    scrollbar-width: none;
+}
+.ProducBoxItem{
+    align-items: start;
+}
+.ProducBoxItem div{
+    overflow: hidden;
+    display: flex;
+    gap: 0px;
+    align-items: center;
+    justify-content: center;
+}
+.ProducBoxItem .images img{
+    border-radius: 10px;
+    height: 240px;
+    width: 100%;
+}
+
+.ProducBoxItem .images{
+    position: relative;
+}
+
+.fw-description{
+    font-weight: 200;
+}
+.imagenavigation{
+    width: 100%;
+    display: flex;
+    z-index: 999;
+    position: absolute;
+    bottom: 5px;
+    gap: 10px;
+}
+
+.imagenavigation div{
+    height: 10px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: black;
+}

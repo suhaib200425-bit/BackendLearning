@@ -41,8 +41,8 @@ function BannerDisplay({ setPAGE, PAGE, setImageUrl, setBanner, setUPDATE,type }
             </div>
             {
                 AllBanner && AllBanner.map(elem => (
-                    <div className={type!='banner'?"col-4 Image_Box":"col-6 Image_Box"} key={elem._id}>
-                        <img className='col-12' style={{width:type!='banner'&&'150px',height:type!='banner'&&'150px',borderRadius:type!='banner'&&'50%'}} src={`${BASEURL}/image/${elem.image}`} alt="" srcset="" />
+                    <div className={type!='banner'?"col-3 Image_Box":"col-6 Image_Box"} key={elem._id}>
+                        <img className='col-12' style={{width:type!='banner'&&'150px',height:type!='banner'&&'150px',borderRadius:type!='banner'&&'50%'}} src={`${BASEURL}/image/${elem.image}`} alt="" srcSet="" />
                         <div className={type!='banner'?"TopBar col-12 flex-column":"TopBar col-12"}>
                             <h5>{elem.category}</h5>
                             <div className="d-flex gap-2">

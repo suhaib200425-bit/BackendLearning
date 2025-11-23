@@ -34,6 +34,8 @@ function Banner({type}) {
         if (Banner.category && Banner.user) {
             let res
             if (!UPDATE && Banner.image) {
+                console.log(Banner);
+                
                 res = await axios.post(`${BASEURL}/${type}/upload`, Banner, {
                     headers: {
                         "Content-Type": "multipart/form-data",
