@@ -37,12 +37,6 @@ function Product() {
     setProduct({ ...Product, [event.target.name]: event.target.value, user: User._id })
   }
 
-  const HandleUpdate = async (event) => {
-    event.preventDefault();
-    console.log(Product);
-
-  }
-
 
   const HandleSubmit = async (event) => {
     event.preventDefault();
@@ -65,13 +59,21 @@ function Product() {
           headers: { "Content-Type": "multipart/form-data" }
         });
         console.log(res.data);
+        res.data.status && setAllProduct([...AllProduct, res.data.Items])
       } else {
         res = await axios.patch(`${BASEURL}/product/update/${Product.UPDATEID}`, formData, {
           headers: { "Content-Type": "multipart/form-data" }
         });
-        res.data.status&&setUPDATE(false)
+        res.data.status && setUPDATE(false)
+        if (res.data.status) {
+          const UpdateItem = res.data.items;
+          const Data=AllProduct.map(element=>{
+            if(element._id===UpdateItem._id)  return UpdateItem
+            return element
+          })
+          setAllProduct(Data)
+        }
         setPAGE(!PAGE)
-        console.log('UPDATE',res.data);
       }
 
       if (res.data.status) {
@@ -114,7 +116,7 @@ function Product() {
       category: element.category,
       price: element.price,
       description: element.description,
-      user:User._id,
+      user: User._id,
       UPDATEID: element._id
     })
 

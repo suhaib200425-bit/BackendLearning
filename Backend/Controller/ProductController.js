@@ -14,8 +14,8 @@ exports.addproduct = async (req, res) => {
                 description: req.body.description,
                 image: imageurls
             })
-            await Product.save()
-            res.json({ status: true, message: "Product Added Successful", })
+            SaveProduct =await Product.save()
+            res.json({ status: true, message: "Product Added Successful",Items:SaveProduct })
         } else {
             res.json({ status: false, message: 'Body Not Available' })
         }
@@ -69,5 +69,5 @@ exports.updateproduct = async (req, res) => {
         { new: true } // returns updated data
     );
 
-    return res.status(200).json({ status: true, message: "Product is founded", item: updatedBanner })
+    return res.status(200).json({ status: true, message: "Product is founded", items: updatedBanner })
 }
