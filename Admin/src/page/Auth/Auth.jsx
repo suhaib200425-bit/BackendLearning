@@ -58,7 +58,7 @@ function Auth() {
                         <label className='mt-2'>Email</label>
                         <input value={User.email?User.email:''} onChange={(e) => handlechange(e)} className='col-8 ps-3' type="email" name='email' placeholder='Email' required />
                         <label className='mt-2'>Password</label>
-                        <input value={User.password?User.name:''} onChange={(e) => handlechange(e)} className='col-8 ps-3' type="password" name='password' placeholder='Password' required />
+                        <input value={User.password?User.password:''} onChange={(e) => handlechange(e)} className='col-8 ps-3' type="password" name='password' placeholder='Password' required />
                         {
                             Form && <>
                                 <label className='mt-2'>Confirm Password</label>
