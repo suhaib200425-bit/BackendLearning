@@ -20,14 +20,16 @@ function Auth() {
         try {
             if (!Form) {
                 const res = await axios.post(`${BASEURL}/admin/login`, User)
-                res.status && localStorage.setItem("token", res.data.token);
-                res.status && navigate('/home')
+                res.data.status && localStorage.setItem("token", res.data.token);
+                res.data.status && navigate('/home')
+                res.data&&setUser({})
                 console.log(res.data);
             } else {
                 if (User.password === User.confirm_password) {
                     const res = await axios.post(`${BASEURL}/admin/register`, User)
                     console.log(res.data);
-                    setForm(true)
+                    res.data.status&&setForm(true)
+                    res.data.status&&setUser({})
                 } else alert('Password Is Not Matched')
             }
         } catch (err) {
@@ -50,17 +52,17 @@ function Auth() {
                         {
                             Form && <>
                                 <label>User Name</label>
-                                <input onChange={(e) => handlechange(e)} className='col-8 ps-3' type="text" name='name' placeholder='User Name' required />
+                                <input value={User.name?User.name:''} onChange={(e) => handlechange(e)} className='col-8 ps-3' type="text" name='name' placeholder='User Name' required />
                             </>
                         }
                         <label className='mt-2'>Email</label>
-                        <input onChange={(e) => handlechange(e)} className='col-8 ps-3' type="email" name='email' placeholder='Email' required />
+                        <input value={User.email?User.email:''} onChange={(e) => handlechange(e)} className='col-8 ps-3' type="email" name='email' placeholder='Email' required />
                         <label className='mt-2'>Password</label>
-                        <input onChange={(e) => handlechange(e)} className='col-8 ps-3' type="password" name='password' placeholder='Password' required />
+                        <input value={User.password?User.name:''} onChange={(e) => handlechange(e)} className='col-8 ps-3' type="password" name='password' placeholder='Password' required />
                         {
                             Form && <>
                                 <label className='mt-2'>Confirm Password</label>
-                                <input onChange={(e) => handlechange(e)} className='col-8 ps-3 ' type="password" name='confirm_password' placeholder='Confirm Password' required /></>
+                                <input value={User.confirm_password?User.confirm_password:''} onChange={(e) => handlechange(e)} className='col-8 ps-3 ' type="password" name='confirm_password' placeholder='Confirm Password' required /></>
                         }
                     </div>
                     <div className="head_border"></div>
