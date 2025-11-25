@@ -59,6 +59,10 @@
 
 .fw-description{
     font-weight: 200;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 .imagenavigation{
     width: 100%;

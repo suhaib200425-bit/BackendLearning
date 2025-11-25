@@ -1,0 +1,64 @@
+.Auth {
+    min-height: 100Vh;
+}
+
+.image_auth_screen {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.image_auth_screen img {
+    width: 100%;
+    border-radius: 10px;
+    height: 100%;
+}
+
+.head_border {
+    border-bottom: 2px solid rgba(240, 228, 228, 0.897);
+}
+
+.image_auth_screen .head,
+.image_auth_screen .head .box {
+    display: flex;
+    flex-direction: column;
+    margin-right: 50px;
+}
+
+.image_auth_screen .head p,
+.image_auth_screen .head div label {
+    font-size: 18px;
+    color: rgba(192, 186, 186, 0.74);
+}
+
+.image_auth_screen .head input {
+    background: transparent;
+    height: 50px;
+    border-radius: 8px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    font-size: 19px;
+    border: 2px solid white;
+}
+
+.image_auth_screen .head input:focus {
+    outline: none;
+}
+
+.image_auth_screen .head .btn {
+    background-color: rgb(24, 12, 29);
+    color: white;
+    border-radius: 8px;
+    border: 1.5px solid white;
+}
+
+.Bottom_box div {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+span{
+    color: rgba(22, 78, 182, 0.685);
+}

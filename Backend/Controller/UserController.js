@@ -55,7 +55,7 @@ exports.login = async (req, res) => {
                         email: email
                     },
                     'USER_JWT_SECRET',
-                    { expiresIn: 60 }
+                    { expiresIn: '1d' }
                 );
                 res.json({
                     status: true,
@@ -73,6 +73,10 @@ exports.login = async (req, res) => {
 
 exports.getfun = async (req, res) => {
     console.log(req.user);
-    const User = await UserModel.findOne({ email: req.user.email, _id: req.user.id });
-    res.json(User)
+    try {
+        const User = await UserModel.findOne({ email: req.user.email, _id: req.user.id });
+        res.json({ status: true, message: 'UserExist', User })
+    } catch (err) {
+        res.json({ status: false, message: 'Sorry', Error: err })
+    }
 }

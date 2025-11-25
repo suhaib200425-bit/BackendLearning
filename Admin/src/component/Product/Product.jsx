@@ -123,6 +123,13 @@ function Product() {
     setPAGE(false)
     console.log(element);
   }
+
+  function NumberToString(Price) {
+        return Price.toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
   return (
     <div className='Product'>
       <div className="TopBar col-12">
@@ -139,7 +146,7 @@ function Product() {
           <div className="row productrow">
             {
               AllProduct && AllProduct.map((elem) => (
-                <div className="col-3 d-flex justify-content-between flex-column mb-4">
+                <div className="col-4 d-flex justify-content-between flex-column mb-4">
                   <div className=" ProducBoxItem">
                     <div className='images col-12'>
                       <img id={elem._id} src={`${BASEURL}/image/${elem.image[0]}`} alt="" srcset="" />
@@ -151,7 +158,7 @@ function Product() {
                     </div>
                     <h5 className='mt-2'>{elem.name}</h5>
                     <h5 className='mt-2'>{elem.category}</h5>
-                    <label>₹ {elem.price}</label>
+                    <label>₹ {NumberToString(elem.price)}</label>
                     <p className='fw-description'>{elem.description}</p>
                   </div>
                   <div className="d-flex gap-2">

@@ -1,0 +1,9 @@
+.Banner{
+    height: 90vh;
+    border-radius: 10px;
+}
+.Banner img{
+    height: 95%;
+    border-radius: 10px;
+    width: 100%;
+}
