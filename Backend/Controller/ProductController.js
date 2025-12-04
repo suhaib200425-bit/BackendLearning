@@ -70,4 +70,4 @@ exports.updateproduct = async (req, res) => {
     );
 
     return res.status(200).json({ status: true, message: "Product is founded", items: updatedBanner })
-}
+} 
