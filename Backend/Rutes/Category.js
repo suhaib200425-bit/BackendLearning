@@ -1,12 +1,13 @@
 const express = require('express');
-const { addCategory, getCategory, deleteCategory, updateCategory } = require('../Controller/CategoryController.js');
+const {addItem, deleteItem, updateItem, getItem } = require('../Controller/BannerCategoryController.js');
 const upload = require('./Multer/Multer.js');
+const authMiddleware = require('../Middleware/Auth.js');
 const CategoryRouter = express.Router();
 
 
-CategoryRouter.post('/upload', upload.single("image"), addCategory)
-CategoryRouter.delete("/delete/:id", deleteCategory);
-CategoryRouter.patch("/update/:id", upload.single("image"), updateCategory);
-CategoryRouter.get('/', getCategory)
+CategoryRouter.post('/upload', authMiddleware('ADMIN'),upload.single("image"), addItem('category'))
+CategoryRouter.delete("/delete/:id", deleteItem('category'));
+CategoryRouter.patch("/update/:id", authMiddleware('ADMIN'),upload.single("image"), updateItem('category'));
+CategoryRouter.get('/', getItem('category'))
 
 module.exports = CategoryRouter;

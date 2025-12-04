@@ -5,14 +5,14 @@ import { BASEURL } from '../../variable/variables'
 import { Context } from '../../context/Context'
 import { Upload } from '../../assets/assets'
 import BannerDisplay from './BannerDisplay'
-function Banner({type}) {
+function Banner({ type }) {
     const [ImageUrl, setImageUrl] = useState('')
     const [PAGE, setPAGE] = useState(false)
     const [UPDATE, setUPDATE] = useState(false)
     const [Banner, setBanner] = useState({
         category: 'Choose...'
     })
-    const { User } = useContext(Context)
+    const { token } = useContext(Context)
     useEffect(() => {
         const Banner = async () => {
             const res = await axios.get(`${BASEURL}/${type}/`)
@@ -22,8 +22,7 @@ function Banner({type}) {
     }, [])
     const ImageAdd = () => {
         document.getElementById('ImgaeInput').click()
-        const user = User?._id;
-        setBanner({ ...Banner, user })
+        setBanner({ ...Banner })
     }
     const HandleImage = (e) => {
         const file = e.target.files[0]
@@ -31,22 +30,24 @@ function Banner({type}) {
         setBanner({ ...Banner, image: file })
     }
     const HandleSubmit = async (e) => {
-        if (Banner.category && Banner.user) {
+        if (Banner.category) {
             let res
             if (!UPDATE && Banner.image) {
-                console.log(Banner);
-                
                 res = await axios.post(`${BASEURL}/${type}/upload`, Banner, {
                     headers: {
                         "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${token}`
                     },
                 });
-                console.log(res);
+                console.log(res.data);
             }
             else if (UPDATE) {
-                alert('hghg')
                 res = await axios.patch(`${BASEURL}/${type}/update/${Banner.BOCID}`, Banner, {
-                    headers: { "Content-Type": "multipart/form-data" }
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${token}`
+                    }
+
                 });
 
                 console.log(res.data);
@@ -74,8 +75,8 @@ function Banner({type}) {
                                 setPAGE(!PAGE)
                             }}>Add Item</button>
                         </div>
-                        <div style={{width:type!='banner'?'200px':'300px'}} className="imageBox pt-3"  onClick={ImageAdd}>
-                            <img style={{borderRadius:type!='banner'?'50%':'10px'}} src={ImageUrl != '' ? ImageUrl : Upload} alt="" />
+                        <div style={{ width: type != 'banner' ? '200px' : '300px' }} className="imageBox pt-3" onClick={ImageAdd}>
+                            <img style={{ borderRadius: type != 'banner' ? '50%' : '10px' }} src={ImageUrl != '' ? ImageUrl : Upload} alt="" />
                             <input onChange={(e) => HandleImage(e)} type="file" className='d-none' name="image" id="ImgaeInput" accept="image/*" />
                         </div>
                         <h5 className='mt-3'>Category</h5>

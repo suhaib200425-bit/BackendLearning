@@ -1,13 +1,14 @@
 const express = require('express');
-const { addbanner, getbanner, deletebanner, updatebanner } = require('../Controller/BannerController');
 const upload = require('./Multer/Multer');
+const { addItem, deleteItem, updateItem, getItem } = require('../Controller/BannerCategoryController.js');
+const authMiddleware = require('../Middleware/Auth.js');
 
 const BannerRouter = express.Router();
 
-BannerRouter.post('/upload',upload.single("image"),addbanner)
-BannerRouter.delete("/delete/:id", deletebanner);
-BannerRouter.patch("/update/:id",upload.single("image"),updatebanner );
-BannerRouter.get('/',getbanner)
+BannerRouter.post('/upload',authMiddleware('ADMIN'),upload.single("image"),addItem('banner'))
+BannerRouter.delete("/delete/:id", deleteItem('banner'));
+BannerRouter.patch("/update/:id",authMiddleware('ADMIN'),upload.single("image"),updateItem('banner') );
+BannerRouter.get('/',getItem('banner'))
 
 
 module.exports = BannerRouter;

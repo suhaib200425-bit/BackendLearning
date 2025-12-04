@@ -1,81 +1,65 @@
-const UserModel = require("../Models/UserModel.js")
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-exports.register = async (req, res) => {
+const db = require('../DB/db.js');
+
+
+exports.adminregister = async (req, res) => {
     try {
-        if (req.body) {
-            const Live = await UserModel.findOne({ email: req.body.email });
-            if (Live) res.json({ status: false, message: 'User exist ' })
+        const username = req.body.name
+        const { email, password } = req.body
+        if (!req.body) return res.json({ status: false, message: 'Body Is Not Read' })
+        //hashing 
+        const hashedPassword = await bcrypt.hash(password, 10);  // 10 → salt roundsconst 
+        const userquery = 'INSERT INTO users ( username, email,password) VALUES (?,?,?)'
+        db.query(userquery, [username, email, hashedPassword], (err, user) => {
+            if (err) return res.json({ status: false, message: 'user Existed', Error: err })
+            res.json({ status: true, message: 'Registration Is Completed' })
+        })
+    } catch (err) { res.json({ status: false, message: err }) }
 
-            //hashing 
-            const hashedPassword = await bcrypt.hash(req.body.password, 10);  // 10 → salt rounds
-
-            User = new UserModel({
-                name: req.body.name,
-                email: req.body.email,
-                password: hashedPassword,
-                dateofbirth: req.body.dateofbirth,
-                address: req.body.address,
-                place: req.body.place,
-                pincode: req.body.pincode,
-            })
-            await User.save()
-            res.json({
-                status: true,
-                message: 'User Created successfully '
-            })
-        } else {
-            res.json({
-                status: true,
-                message: 'body data is not available'
-            })
-        }
-    } catch {
-        (err) => {
-            res.json({
-                status: false,
-                message: err
-            })
-            console.log(err)
-        };
-    }
 }
 
-exports.login = async (req, res) => {
+exports.userlogin = async (req, res) => {
     try {
-        if (req.body) {
-            const { email, password } = req.body
-            const Live = await UserModel.findOne({ email: email });
-            if (Live) {
-                const IsMatch = bcrypt.compare(password, Live.password);
-                if (!IsMatch) res.json({ status: false, message: 'Login Faild' })
-                const token = jwt.sign(
-                    {
-                        id: Live._id,
-                        email: email
-                    },
-                    'USER_JWT_SECRET',
-                    { expiresIn: '1d' }
-                );
-                res.json({
-                    status: true,
-                    message: "Login successful",
-                    token: token,
-                });
-            }
-            else res.json({ status: false, message: 'User Is Not Register' })
-        }
+        if (!req.body) return res.json({ status: false, message: 'Body Is Not Available' })
+        const { email, password } = req.body
+        const userquery = `SELECT * FROM users WHERE email = ?`
+        db.query(userquery, [email], (err, user) => {
+            if (err) return res.json({ status: false, message: 'user Existed', Error: err })
+            console.log(user);
+            const IsMatch = bcrypt.compare(password, user[0].password);
+            if (!IsMatch) return res.json({ status: false, message: 'Login Faild Password Is Not Match' })
+            const token = jwt.sign(
+                {
+                    id: user[0].id,
+                    email: user[0].email
+                },
+                process.env.JWT_SECRET_USER,
+                { expiresIn: '1d' }
+            );
+            res.json({
+                status: true,
+                message: "user Login successful",
+                token: token,
+            });
+        })
+
     }
     catch (err) {
         res.json({ status: false, message: err })
     }
 }
 
-exports.getfun = async (req, res) => {
-    console.log(req.user);
+exports.getadmin = async (req, res) => {
     try {
-        const User = await UserModel.findOne({ email: req.user.email, _id: req.user.id });
-        res.json({ status: true, message: 'UserExist', User })
+        const { email } = req.user
+        const getadminquery = `SELECT id,username,email FROM users WHERE email = ?`;
+        db.query(getadminquery, [email], (err, admin) => {
+            if (err) return res.json({ status: false, message: err })
+            if (admin.length == 0) return res.json({ status: false, message: 'Admin Is Not De Founded' })
+            res.json({ status: true, message: 'UserExist', User: admin[0] })
+        })
     } catch (err) {
         res.json({ status: false, message: 'Sorry', Error: err })
     }
