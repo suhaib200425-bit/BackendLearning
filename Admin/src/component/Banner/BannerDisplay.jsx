@@ -3,6 +3,7 @@ import { BASEURL } from '../../variable/variables'
 import './Banner.css'
 import axios from 'axios'
 import { Context } from '../../context/Context'
+import Empty from '../Empty/Empty'
 function BannerDisplay({ setPAGE, PAGE, setImageUrl, setBanner, setUPDATE,type }) {
     const [AllBanner, setAllBanner] = useState([])
     useEffect(() => {
@@ -30,7 +31,10 @@ function BannerDisplay({ setPAGE, PAGE, setImageUrl, setBanner, setUPDATE,type }
     }
     return (
         <div className='BannerDisplay col-12 row'>
-            <div className="TopBar col-12">
+            {
+                AllBanner.length?
+                <>
+                <div className="TopBar col-12">
                 <h4>Banners</h4>
                 <button className='Botton_New_item' onClick={() => {
                     setPAGE(!PAGE)
@@ -50,7 +54,12 @@ function BannerDisplay({ setPAGE, PAGE, setImageUrl, setBanner, setUPDATE,type }
                         </div>
                     </div>
                 ))
+                
             }
+            </>:
+            <Empty PAGE/>
+            }
+            
 
         </div>
     )

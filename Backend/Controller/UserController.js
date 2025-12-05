@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const db = require('../DB/db.js');
 
 
-exports.adminregister = async (req, res) => {
+exports.register = async (req, res) => {
     try {
         const username = req.body.name
         const { email, password } = req.body
@@ -20,7 +20,7 @@ exports.adminregister = async (req, res) => {
 
 }
 
-exports.userlogin = async (req, res) => {
+exports.login = async (req, res) => {
     try {
         if (!req.body) return res.json({ status: false, message: 'Body Is Not Available' })
         const { email, password } = req.body
@@ -51,14 +51,14 @@ exports.userlogin = async (req, res) => {
     }
 }
 
-exports.getadmin = async (req, res) => {
+exports.getfun = async (req, res) => {
     try {
         const { email } = req.user
-        const getadminquery = `SELECT id,username,email FROM users WHERE email = ?`;
-        db.query(getadminquery, [email], (err, admin) => {
+        const getuserquery = `SELECT id,username,email FROM users WHERE email = ?`;
+        db.query(getuserquery, [email], (err, user) => {
             if (err) return res.json({ status: false, message: err })
-            if (admin.length == 0) return res.json({ status: false, message: 'Admin Is Not De Founded' })
-            res.json({ status: true, message: 'UserExist', User: admin[0] })
+            if (user.length == 0) return res.json({ status: false, message: 'user Is Not De Founded' })
+            res.json({ status: true, message: 'UserExist', User: user[0] })
         })
     } catch (err) {
         res.json({ status: false, message: 'Sorry', Error: err })

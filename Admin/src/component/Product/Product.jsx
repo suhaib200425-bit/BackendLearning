@@ -13,7 +13,7 @@ function Product() {
   const [AllProduct, setAllProduct] = useState([])
   const [PAGE, setPAGE] = useState(false)
   const [UPDATE, setUPDATE] = useState(false)
-  const { User } = useContext(Context)
+  const { token } = useContext(Context)
   useEffect(() => {
     const dataread = async () => {
       const res = await axios.get(`${BASEURL}/product`)
@@ -34,13 +34,13 @@ function Product() {
   }
 
   const Handlechange = (event) => {
-    setProduct({ ...Product, [event.target.name]: event.target.value, user: User._id })
+    setProduct({ ...Product, [event.target.name]: event.target.value })
   }
 
 
   const HandleSubmit = async (event) => {
     event.preventDefault();
-    if (Product.user) {
+    if (Product) {
 
       const formData = new FormData();
 
@@ -48,27 +48,34 @@ function Product() {
       formData.append("category", Product.category);
       formData.append("price", Product.price);
       formData.append("description", Product.description);
-      formData.append("user", Product.user);
 
-      Product.images?.forEach(file => {
-        formData.append("images", file);
-      });
+      if (Product.images) {
+        Product.images?.forEach(file => {
+          formData.append("images", file);
+        });
+      }
       let res
       if (!UPDATE) {
         res = await axios.post(`${BASEURL}/product/upload`, formData, {
-          headers: { "Content-Type": "multipart/form-data" }
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`
+          }
         });
         console.log(res.data);
         res.data.status && setAllProduct([...AllProduct, res.data.Items])
       } else {
         res = await axios.patch(`${BASEURL}/product/update/${Product.UPDATEID}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" }
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`
+          }
         });
         res.data.status && setUPDATE(false)
         if (res.data.status) {
           const UpdateItem = res.data.items;
-          const Data=AllProduct.map(element=>{
-            if(element._id===UpdateItem._id)  return UpdateItem
+          const Data = AllProduct.map(element => {
+            if (element.id === UpdateItem.id) return UpdateItem
             return element
           })
           setAllProduct(Data)
@@ -81,7 +88,7 @@ function Product() {
         setImageurls([])
       }
     } else {
-      alert('user is not Available')
+      alert('product is not Available')
     }
   }
 
@@ -101,7 +108,7 @@ function Product() {
       headers: { "Content-Type": "multipart/form-data" }
     })
     if (res.data.status) {
-      const filtered = AllProduct.filter(item => item._id !== docid);
+      const filtered = AllProduct.filter(item => item.id !== docid);
       setAllProduct(filtered)
     }
     console.log(res.data);
@@ -116,8 +123,8 @@ function Product() {
       category: element.category,
       price: element.price,
       description: element.description,
-      user: User._id,
-      UPDATEID: element._id
+      user: User.id,
+      UPDATEID: element.id
     })
 
     setPAGE(false)
@@ -125,11 +132,11 @@ function Product() {
   }
 
   function NumberToString(Price) {
-        return Price.toLocaleString("en-IN", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-    }
+    return Price.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
   return (
     <div className='Product'>
       <div className="TopBar col-12">
@@ -149,10 +156,10 @@ function Product() {
                 <div className="col-4 d-flex justify-content-between flex-column mb-4">
                   <div className=" ProducBoxItem">
                     <div className='images col-12'>
-                      <img id={elem._id} src={`${BASEURL}/image/${elem.image[0]}`} alt="" srcset="" />
+                      <img id={elem.id} src={`${BASEURL}/image/${elem.image[0]}`} alt="" srcset="" />
                       <div className="imagenavigation">
                         {
-                          elem.image.map((img, index) => <div id={`${index}${elem._id}`} onMouseOver={() => Hoverfunction(img, elem._id, index)} onMouseOut={() => HoverDownfunction(index, elem._id)} className=" ImageBox m-1"></div>)
+                          elem.image.map((img, index) => <div id={`${index}${elem.id}`} onMouseOver={() => Hoverfunction(img, elem.id, index)} onMouseOut={() => HoverDownfunction(index, elem.id)} className=" ImageBox m-1"></div>)
                         }
                       </div>
                     </div>
@@ -163,7 +170,7 @@ function Product() {
                   </div>
                   <div className="d-flex gap-2">
                     <button className='Botton_New_item' onClick={() => updateproduct(elem)}>Update</button>
-                    <button className='Botton_New_item' onClick={() => deleteproduct(elem._id)} >Remove</button>
+                    <button className='Botton_New_item' onClick={() => deleteproduct(elem.id)} >Remove</button>
                   </div>
                 </div>
               ))
