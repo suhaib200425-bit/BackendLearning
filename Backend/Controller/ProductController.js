@@ -4,6 +4,7 @@ const db = require('../DB/db.js');
 const ProductModel = require('../Models/ProductModel.js')
 const fs = require("fs");
 const { json } = require('stream/consumers');
+const { toNamespacedPath } = require('path');
 
 exports.addproduct = async (req, res) => {
     try {
@@ -18,15 +19,44 @@ exports.addproduct = async (req, res) => {
             if (!result.affectedRows) return res, json({ status: false, message: 'Product Do Not Added' })
 
             const imageurls = req.files?.map(file => [result.insertId, file.filename])
-            log(imageurls)
             const productimagesquery = 'INSERT INTO product_images (product_id, image_path) VALUES ?'
             db.query(productimagesquery, [imageurls], (err2, result2) => {
                 if (err2) return res.json({ status: false, message: err2.message, Error: err2 })
 
                 if (!result.affectedRows) return res.json({ status: false, message: 'Product Images Do Not Added' })
+                let product = {};
+                const getproductsquery = 'SELECT * FROM products INNER JOIN product_images ON products.id=product_images.product_id  WHERE products.id=?'
+                db.query(getproductsquery, [result.insertId], (err3, result3) => {
+                    if (err3) return res.json({ status: false, message: err3.message, Error: err3 })
+                    if (result3.length == 0) return res.json({ status: false, message: 'Data Is Not Available' })
 
-                log(result2)
-                res.json({ status: result2.insertId })
+                    let addedproduct = {};  // map of products
+
+                    result3.forEach(row => {
+
+                        if (!addedproduct[result.insertId]) {
+                            addedproduct[result.insertId] = {
+                                id: row.product_id,
+                                admin_id: row.admin_id,
+                                category: row.category,
+                                name: row.name,
+                                price: row.price,
+                                description: row.description,
+                                image: []
+                            };
+                        }
+
+                        if (row.image_path && row.id) {
+                            addedproduct[row.product_id].image.push({
+                                id: row.id,
+                                image_path: row.image_path
+                            });
+                        }
+
+                    });
+                    res.json({ status: true, message: "Product Added", Item: addedproduct[result.insertId] })
+                })
+
             })
         })
 
@@ -37,12 +67,13 @@ exports.addproduct = async (req, res) => {
 
 
 exports.getproduct = async (req, res) => {
-    const getproductsquery = 'SELECT * FROM products INNER JOIN product_images'
+    const getproductsquery = 'SELECT * FROM products INNER JOIN product_images ON products.id = product_images.product_id'
     db.query(getproductsquery, (err, result) => {
         if (err) return res.json({ status: false, message: err.message, Error: err })
+        if (!result.length) return res.json({ status: false, message: 'Product Is Not Available' })
         const products = []
         result.forEach(row => {
-            let product= products.find(item => item === row.product_id);
+            let product = products.find(item => item.id === row.product_id);
             if (!product) {
                 product = {
                     id: row.product_id,
@@ -53,12 +84,14 @@ exports.getproduct = async (req, res) => {
                     description: row.description,
                     image: []
                 }
+                products.push(product)
             }
-            if(product.image){
-                "CLASS KAZHINJ VERAM TTO"
+            if (product.image) {
+                product.image.push({ id: row.id, image_path: row.image_path })
             }
+
         });
-        return res.json({ status: true, message: 'data is ther' })
+        return res.json({ status: true, message: 'Data Readed', Item: products })
     })
     // const Items = await ProductModel.find()
     // if (Items.length == 0) res.json({ status: false, message: 'item is not found' })
@@ -67,41 +100,78 @@ exports.getproduct = async (req, res) => {
 
 exports.deleteproduct = async (req, res) => {
     try {
-        const Product = await ProductModel.findById(req.params.id);
-        if (!Product) return res.status(404).json({ status: false, message: "Product not found" });
+        const DOCID = req.params.id
+        const ProductImagesDeletingQuery = 'SELECT image_path  FROM product_images WHERE product_id = ?'
+        db.query(ProductImagesDeletingQuery, [DOCID], (err1, Images) => {
+            if (err1) return res.json({ status: false, message: 'error2' + err1.message, Error: err1 })
+            // if (!Images.length) return res.json({ status: false, message: 'images not found' })
+            // Delete Products from DB
+            const ProductDeletingQuery = 'DELETE FROM products WHERE id = ?'
+            db.query(ProductDeletingQuery, [DOCID], (err2, Products) => {
+                if (err2) return res.json({ status: false, message: 'error2' + err2.message, Error: err2 })
+                if (!Products.affectedRows) return res.json({ status: false, message: 'Products not found' })
 
-        // Delete file from folder
-        Product.image.map(image => {
-            fs.unlink(`uploads/${image}`, (err) => {
-                if (err) console.log("File already deleted or not found");
-            });
+                // Delete file from folder   
+                Images.forEach(item => {
+                    fs.unlink(`uploads/${item.image_path}`, (err) => {
+                        if (err) console.log("File already deleted or not found");
+                    });
+                })
+                return res.json({ status: true, message: 'Product Deleted' })
+            })
+
         })
-
-        // Delete from DB
-        await ProductModel.findByIdAndDelete(req.params.id);
-
-        res.json({ status: true, message: "Product deleted successfully" });
-
     } catch (err) {
-        res.json({ status: false, message: err.message });
+        res.json({ status: false, message: 'Catch =' + err.message });
     }
 }
 
 exports.updateproduct = async (req, res) => {
-    const imageurls = req.files?.map(file => file.filename)
-    const docid = req.params.id
-    const Product = await ProductModel.findById(docid);
-    if (!Product) return res.status(404).json({ status: false, message: "Product not found" });
+    // 
+    try {
+        const docid = req.params.id
+        const admin_id = req.user.id
+        const { category, name, price, description } = req.body
+        const ProductUdateQuery = ` UPDATE products SET admin_id=? , category = ?, name = ?, price = ?, description = ? WHERE id = ?`
+        db.query(ProductUdateQuery, [admin_id, category, name, price, description, docid], (err, updateproduct) => {
+            if (err) return res.json({ status: false, message: "1" + err.message, Error: err })
+            if (!updateproduct.affectedRows) return res.json({ status: false, message: 'Products not found' })
+            const productimagesquery = 'INSERT INTO product_images (product_id, image_path) VALUES (?,?)'
 
-    const UpdateObj = imageurls ? {
-        image: [...Product.image, ...imageurls],
-        ...req.body
-    } : { ...req.body }
-    const updatedBanner = await ProductModel.findByIdAndUpdate(
-        docid,
-        UpdateObj,
-        { new: true } // returns updated data
-    );
+            req.files?.forEach(file => {
+                db.query(productimagesquery, [docid, file.filename], (err5, result5) => {
+                    if (err5) console.log(err5);
+                });
+            })
+            db.query('SELECT * FROM products INNER JOIN product_images ON products.id = product_images.product_id  WHERE products.id=?', [docid], (err2, result) => {
+                if (err2) return res.json({ status: false, message: 'err2' + err2.message, Error: err2 })
 
-    return res.status(200).json({ status: true, message: "Product is founded", items: updatedBanner })
+                let addedproduct = {};  // map of products
+                result.forEach(row => {
+                    if (!addedproduct[docid]) {
+                        addedproduct[docid] = {
+                            id: row.product_id,
+                            admin_id: row.admin_id,
+                            category: row.category,
+                            name: row.name,
+                            price: row.price,
+                            description: row.description,
+                            image: []
+                        };
+                    }
+
+                    if (row.image_path && row.id) {
+                        addedproduct[docid].image.push({
+                            id: row.id,
+                            image_path: row.image_path
+                        });
+                    }
+
+                });
+                res.json({ status: true, message: "Product Updated", Item: addedproduct[docid] })
+            })
+        })
+    } catch (err) {
+        res.json({ status: false, message: err.message })
+    }
 } 

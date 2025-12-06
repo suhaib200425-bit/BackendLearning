@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const UserRoute = require("./Rutes/User.js");
-const dbconnection = require("./DB/db.js");
 const AdminRoute = require("./Rutes/Admin.js");
 const BannerRouter = require("./Rutes/Banner.js");
 const CategoryRouter =require("./Rutes/Category.js");
@@ -31,7 +30,7 @@ app.use('/user', UserRoute)
 app.use('/admin', AdminRoute)
 app.use('/banner', BannerRouter)
 app.use('/category',CategoryRouter)
-app.use('/product',ProductRoute )
+app.use('/product',ProductRoute)
 
 app.use("/image", express.static("uploads"));
 

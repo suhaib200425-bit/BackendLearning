@@ -18,7 +18,7 @@ function Product() {
     const dataread = async () => {
       const res = await axios.get(`${BASEURL}/product`)
       res.data.status && setPAGE(true)
-      res.data.status && setAllProduct(res.data.Items)
+      res.data.status && setAllProduct(res.data.Item)
       console.log(res.data);
     }
     dataread()
@@ -63,7 +63,7 @@ function Product() {
           }
         });
         console.log(res.data);
-        res.data.status && setAllProduct([...AllProduct, res.data.Items])
+        res.data.status && setAllProduct([...AllProduct, res.data.Item])
       } else {
         res = await axios.patch(`${BASEURL}/product/update/${Product.UPDATEID}`, formData, {
           headers: {
@@ -71,16 +71,18 @@ function Product() {
             Authorization: `Bearer ${token}`
           }
         });
+        console.log(res.data);
+        
         res.data.status && setUPDATE(false)
         if (res.data.status) {
-          const UpdateItem = res.data.items;
+          const UpdateItem = res.data.Item;
           const Data = AllProduct.map(element => {
             if (element.id === UpdateItem.id) return UpdateItem
             return element
           })
           setAllProduct(Data)
         }
-        setPAGE(!PAGE)
+        res.data.status && setPAGE(!PAGE)
       }
 
       if (res.data.status) {
@@ -116,14 +118,13 @@ function Product() {
   }
   const updateproduct = async (element) => {
     setUPDATE(true)
-    const URLS = element.image.map(elem => `${BASEURL}/image/${elem}`)
+    const URLS = element.image.map(elem => `${BASEURL}/image/${elem.image_path}`)
     setImageurls(URLS)
     setProduct({
       name: element.name,
       category: element.category,
       price: element.price,
       description: element.description,
-      user: User.id,
       UPDATEID: element.id
     })
 
@@ -153,13 +154,13 @@ function Product() {
           <div className="row productrow">
             {
               AllProduct && AllProduct.map((elem) => (
-                <div className="col-4 d-flex justify-content-between flex-column mb-4">
+                <div className="col-3 d-flex justify-content-between flex-column mb-4">
                   <div className=" ProducBoxItem">
                     <div className='images col-12'>
-                      <img id={elem.id} src={`${BASEURL}/image/${elem.image[0]}`} alt="" srcset="" />
+                      <img id={elem.id} src={`${BASEURL}/image/${elem.image[0].image_path}`} alt="" srcSet="" />
                       <div className="imagenavigation">
                         {
-                          elem.image.map((img, index) => <div id={`${index}${elem.id}`} onMouseOver={() => Hoverfunction(img, elem.id, index)} onMouseOut={() => HoverDownfunction(index, elem.id)} className=" ImageBox m-1"></div>)
+                          elem.image.map((img) => <div id={`${img.id}${elem.id}`} onMouseOver={() => Hoverfunction(img.image_path, elem.id, img.id)} onMouseOut={() => HoverDownfunction(img.id, elem.id)} className=" ImageBox m-1"></div>)
                         }
                       </div>
                     </div>

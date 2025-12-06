@@ -28,7 +28,7 @@ function Auth() {
                 if (User.password === User.confirm_password) {
                     const res = await axios.post(`${BASEURL}/admin/register`, User)
                     console.log(res.data);
-                    res.data.status&&setForm(true)
+                    res.data.status&&setForm(false)
                     res.data.status&&setUser({})
                 } else alert('Password Is Not Matched')
             }
