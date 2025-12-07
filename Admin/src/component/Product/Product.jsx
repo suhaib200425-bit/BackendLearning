@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { BASEURL } from '../../variable/variables'
 import axios from 'axios'
 import { useState } from 'react'
-import { Upload } from '../../assets/assets'
+import { Upload } from '../../assets/images'
 import { useContext } from 'react'
 import { Context } from '../../context/Context'
 function Product() {

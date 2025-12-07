@@ -1,6 +1,6 @@
 import React from 'react'
 import './Auth.css'
-import { AuthScreen } from '../../assets/assets.js'
+import { AuthScreen } from '../../assets/images.js'
 import { useState } from 'react'
 import axios from 'axios'
 import { BASEURL } from '../../variable/variables.js'
