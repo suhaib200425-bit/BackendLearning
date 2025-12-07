@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import { useEffect } from 'react'
 import './Flash.css'
-import { Logo } from '../../assets/assets.js'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { BASEURL } from '../../variable/variables.js'
@@ -26,7 +25,7 @@ function Flash() {
     }, [])
     return (
         <div className='Flash container'>
-            <img src={Logo} alt="" srcset="" />
+            <img src='https://zebronics.com/cdn/shop/files/Zeb_HORIZONTAL_PNG_White.png?v=1686207745&width=290' alt="" srcset="" />
             <span class="loader"></span>
         </div>
     )

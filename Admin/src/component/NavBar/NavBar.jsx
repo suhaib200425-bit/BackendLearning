@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import './NavBar.css'
-import { Logo } from '../../assets/assets.js'
 import { useNavigate } from 'react-router-dom'
 import { Context } from '../../context/Context.jsx'
 function NavBar() {
@@ -9,7 +8,7 @@ function NavBar() {
     return (
         <div className='NavBar'>
             <div className="NavBar_Logo">
-                <img src={Logo} alt="" />
+                <img src='https://zebronics.com/cdn/shop/files/Zeb_HORIZONTAL_PNG_White.png?v=1686207745&width=290' alt="" />
             </div>
             <div className="NavBar_icons">
                 <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
