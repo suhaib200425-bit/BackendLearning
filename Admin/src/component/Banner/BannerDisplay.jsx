@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import { BASEURL } from '../../variable/variables'
 import './Banner.css'
 import axios from 'axios'
-import { Context } from '../../context/Context'
+// import { Context } from '../../context/Context'
 import Empty from '../Empty/Empty'
 function BannerDisplay({ setPAGE, PAGE, setImageUrl, setBanner, setUPDATE,type }) {
     const [AllBanner, setAllBanner] = useState([])
