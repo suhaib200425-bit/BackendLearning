@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import './NavBar.css'
 import { Logo } from '../../assets/assets.js'
-import { Link, useNavigate } from 'react-router-dom'
+import {  useNavigate } from 'react-router-dom'
 import { Context } from '../../context/Context.jsx'
 function NavBar() {
     const { setUser, Categorys } = useContext(Context)
