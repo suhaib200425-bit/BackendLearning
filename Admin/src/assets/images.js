@@ -1,4 +1,4 @@
-import Logo from'./logo.jpg'
+import Logo from'./Logo.jpg'
 import AuthScreen from './AuthScreen.jpg'
 import Upload from './Upload.jpg'
 
