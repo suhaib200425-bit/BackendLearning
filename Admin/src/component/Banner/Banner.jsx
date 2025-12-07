@@ -3,7 +3,7 @@ import './Banner.css'
 import axios from 'axios'
 import { BASEURL } from '../../variable/variables'
 import { Context } from '../../context/Context'
-import { Upload } from '../../assets/assets'
+import { Upload } from '../../assets/images'
 import BannerDisplay from './BannerDisplay'
 function Banner({ type }) {
     const [ImageUrl, setImageUrl] = useState('')
