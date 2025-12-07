@@ -1,6 +1,6 @@
-import Logo from'../assets/logo.jpg'
-import AuthScreen from '../assets/AuthScreen.jpg'
-import Upload from '../assets/Upload.jpg'
+import Logo from'./logo.jpg'
+import AuthScreen from './AuthScreen.jpg'
+import Upload from './Upload.jpg'
 
 export {
     Logo,
