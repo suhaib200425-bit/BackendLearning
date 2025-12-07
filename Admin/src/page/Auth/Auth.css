@@ -62,3 +62,17 @@
 span{
     color: rgba(22, 78, 182, 0.685);
 }
+.othermethods{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+}
+.othermethods div,.othermethods div svg,.othermethods div label{
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.493);
+    color: white;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}

@@ -30,10 +30,11 @@ exports.adminlogin = async (req, res) => {
         if (!req.body) return res.json({ status: false, message: 'Body Is Not Available' })
         const { email, password } = req.body
         const adminquery = `SELECT * FROM admins WHERE email = ?`
-        db.query(adminquery, [email], (err, admin) => {
+        db.query(adminquery, [email], async (err, admin) => {
             if (err) return res.json({ status: false, message: 'Admin Existed', Error: err })
-            console.log(admin);
-            const IsMatch = bcrypt.compare(password, admin[0].password);
+            if (admin.length==0) return res.json({ status: false, message: 'Email Is not Exist', Error: err })
+            console.log('admin = '+admin[0].password);
+            const IsMatch = await bcrypt.compare(password, admin[0].password);
             if (!IsMatch) return res.json({ status: false, message: 'Login Faild Password Is Not Match' })
             const token = jwt.sign(
                 {
