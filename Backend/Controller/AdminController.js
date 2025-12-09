@@ -63,7 +63,11 @@ exports.getadmin = async (req, res) => {
         const getadminquery = `SELECT id,username,email FROM admins WHERE email = ?`;
         db.query(getadminquery, [email], (err, admin) => {
             if (err) return res.json({ status: false, message: err })
+<<<<<<< HEAD
             if (admin.length == 0) return res.json({ status: false, message: 'Admin Is Not De Founded' })
+=======
+            if (admin.length == 0) return res.json({ status: false, message: 'Admin Is Not Be Founded' })
+>>>>>>> 2a7a1e1 (google authentication)
             res.json({ status: true, message: 'UserExist', User: admin[0] })
         })
     } catch (err) {
