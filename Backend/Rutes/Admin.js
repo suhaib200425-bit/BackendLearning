@@ -16,9 +16,7 @@ AdminRoute.post('/register', adminregister)
 AdminRoute.post('/login', adminlogin)
 AdminRoute.get('/', authMiddleware('ADMIN'), getadmin)
 
-<<<<<<< HEAD
 module.exports = AdminRoute;
-=======
 //gooogle authentication
 
 AdminRoute.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }))
