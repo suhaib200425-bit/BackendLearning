@@ -1,13 +1,10 @@
 const express = require('express');
-<<<<<<< HEAD
 const {  getadmin, adminregister,adminlogin } = require('../Controller/AdminController');
 const authMiddleware = require('../Middleware/Auth');
-=======
 const { getadmin, adminregister, adminlogin } = require('../Controller/AdminController');
 const authMiddleware = require('../Middleware/Auth');
 const passport = require('passport');
 const jwt = require("jsonwebtoken");
->>>>>>> 2a7a1e1 (google authentication)
 
 const AdminRoute = express.Router();
 
@@ -40,4 +37,3 @@ AdminRoute.get('/google/callback', passport.authenticate('google', {
 
 module.exports = AdminRoute;
 
->>>>>>> 2a7a1e1 (google authentication)
