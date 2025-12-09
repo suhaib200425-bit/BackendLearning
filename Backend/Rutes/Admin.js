@@ -1,10 +1,6 @@
 const express = require('express');
 const {  getadmin, adminregister,adminlogin } = require('../Controller/AdminController');
 const authMiddleware = require('../Middleware/Auth');
-const { getadmin, adminregister, adminlogin } = require('../Controller/AdminController');
-const authMiddleware = require('../Middleware/Auth');
-const passport = require('passport');
-const jwt = require("jsonwebtoken");
 
 const AdminRoute = express.Router();
 
@@ -13,7 +9,6 @@ AdminRoute.post('/register', adminregister)
 AdminRoute.post('/login', adminlogin)
 AdminRoute.get('/', authMiddleware('ADMIN'), getadmin)
 
-module.exports = AdminRoute;
 //gooogle authentication
 
 AdminRoute.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }))

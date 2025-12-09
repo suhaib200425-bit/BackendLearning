@@ -8,11 +8,8 @@ const ProductRoute = require("./Rutes/Product.js");
 const db = require("./DB/db.js");
 const dotenv=require('dotenv');
 
-<<<<<<< HEAD
-=======
 require('./Auth/Google.js')
 
->>>>>>> 2a7a1e1 (google authentication)
 const app = express()
 const port=8000
 
