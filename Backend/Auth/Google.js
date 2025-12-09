@@ -2,8 +2,10 @@ const passport = require('passport');
 const db = require('../DB/db');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
+require('dotenv').config();
+
 passport.use(new GoogleStrategy({
-  clientID: '771272442766-0q1nbksnhf3u72181emche4on9kt39cp.apps.googleusercontent.com',
+  clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: process.env.GOOGLE_CALL_BACK,
   passReqToCallback: true

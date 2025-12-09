@@ -3,7 +3,7 @@ const {  getadmin, adminregister,adminlogin } = require('../Controller/AdminCont
 const authMiddleware = require('../Middleware/Auth');
 const passport = require('passport')
 const AdminRoute = express.Router();
-
+const jwt = require("jsonwebtoken");
 
 AdminRoute.post('/register', adminregister)
 AdminRoute.post('/login', adminlogin)
