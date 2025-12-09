@@ -1,7 +1,7 @@
 const express = require('express');
 const {  getadmin, adminregister,adminlogin } = require('../Controller/AdminController');
 const authMiddleware = require('../Middleware/Auth');
-
+const passport = require('passport')
 const AdminRoute = express.Router();
 
 
