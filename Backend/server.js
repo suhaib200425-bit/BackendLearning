@@ -9,6 +9,7 @@ const db = require("./DB/db.js");
 const dotenv=require('dotenv');
 
 require('./Auth/Google.js')
+require('./Auth/Facebook.js')
 
 const app = express()
 const port=8000
