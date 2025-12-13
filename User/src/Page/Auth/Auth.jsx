@@ -5,31 +5,33 @@ import { useState } from 'react'
 import axios from 'axios'
 import { BASEURL } from '../../variable/variables.js'
 import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react'
+import { Context } from '../../context/Context.jsx'
 function Auth() {
     const navigate = useNavigate()
     const [Form, setForm] = useState(false)
     const [User, setUser] = useState({})
-
     const handlechange = (e) => {
         setUser({ ...User, [e.target.name]: e.target.value })
     }
-
 
     const handlesubmit = async (e) => {
         e.preventDefault()
         try {
             if (!Form) {
                 const res = await axios.post(`${BASEURL}/user/login`, User)
-                res.data.status && localStorage.setItem("token", res.data.token);
-                res.data.status && navigate('/home')
-                res.data && setUser({})
+                console.log("LOGIN");
                 console.log(res.data);
+                res.data.status && localStorage.setItem("token", res.data.token);
+                res.data && setUser({})
+                res.data.status && navigate('/home')
             } else {
                 if (User.password === User.confirm_password) {
                     const res = await axios.post(`${BASEURL}/user/register`, User)
                     console.log(res.data);
                     res.data.status && setForm(true)
                     res.data.status && setUser({})
+                    setCartItem([])
                 } else alert('Password Is Not Matched')
             }
         } catch (err) {

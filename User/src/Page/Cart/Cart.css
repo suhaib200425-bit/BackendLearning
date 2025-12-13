@@ -1,0 +1,80 @@
+.shoping_cart {
+    height: 90vh;
+}
+
+/* .display_cart_items {
+     display: grid;
+    grid-template-columns: 3fr, 1fr, 1fr, 2fr; 
+}*/
+.display_cart_items .table_name{
+    color: rgba(224, 217, 217, 0.74);
+}
+.display_cart_items .border{
+    border-top: 0.4px solid rgba(255, 255, 255, 0.411);
+    margin: 10px;
+}
+.display_cart_items .cart_item{
+    margin-left: 10px;
+    max-height: 45vh;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    overflow-x: hidden;
+    border-radius: 5px;
+}
+.cart_item div{
+    height: 55;
+    margin-bottom: 5px;
+    color: black;
+    background-color: white;
+}
+.cart_item .Product{
+    cursor: pointer;
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+}
+.cart_item .Product img{
+    height: 40px;
+    width: 50px;
+    background-color: rgba(180, 173, 173, 0.767);
+    border-radius: 7px;
+}
+.cart_item .Quantity{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.cart_item .Total div svg{
+    cursor: pointer;
+}
+.cart_item .Total{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.cart_item .Quantity button{
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    font-size: 20px;
+    border: none;
+}
+.payment_box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.Cartimage{
+    width: 100%;
+    height: 80vh;
+}
+.Cartimage img{
+    border-radius: 10px;
+    height: 100%;
+    width: 100%;
+}
+.payment_amount{
+    display: flex;
+    justify-content: space-between;
+}

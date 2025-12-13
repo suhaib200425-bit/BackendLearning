@@ -48,6 +48,7 @@
     justify-content: center;
 }
 .ProducBoxItem .images img{
+    background-color: white;
     border-radius: 10px;
     height: 240px;
     width: 100%;

@@ -8,6 +8,7 @@ exports.register = async (req, res) => {
     try {
         const username = req.body.name
         const { email, password } = req.body
+        if (!password) return res.json({ status: false, message: 'Password is Not bet sent' })
         if (!req.body) return res.json({ status: false, message: 'Body Is Not Read' })
         //hashing 
         const hashedPassword = await bcrypt.hash(password, 10);  // 10 → salt roundsconst 
@@ -22,18 +23,21 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        if (!req.body) return res.json({ status: false, message: 'Body Is Not Available' })
+        if (!req.body.email && !req.body.password) return res.json({ status: false, message: 'Body Is Not Available' })
         const { email, password } = req.body
         const userquery = `SELECT * FROM users WHERE email = ?`
-        db.query(userquery, [email], (err, user) => {
-            if (err) return res.json({ status: false, message: 'user Existed', Error: err })
-            console.log(user);
-            const IsMatch = bcrypt.compare(password, user[0].password);
+        db.query(userquery, [email], async (err, result) => {
+            if (err) return res.json({ status: false, message: err.message, Error: err })
+            if (result.length == 0) return res.json({ status: false, message: 'User Existed' })
+
+            const USER = result[0]
+            console.log(USER);
+            const IsMatch = await bcrypt.compare(password, USER.password);
             if (!IsMatch) return res.json({ status: false, message: 'Login Faild Password Is Not Match' })
             const token = jwt.sign(
                 {
-                    id: user[0].id,
-                    email: user[0].email
+                    id: USER.id,
+                    email: USER.email
                 },
                 process.env.JWT_SECRET_USER,
                 { expiresIn: '1d' }

@@ -5,9 +5,9 @@ import Product from '../../Component/Product/Product'
 function Home() {
   return (
     <div className='container'>
-        <NavBar />
-        <Banner />
-        <Product />
+      <NavBar />
+      <Banner />
+      <Product />
     </div>
   )
 }

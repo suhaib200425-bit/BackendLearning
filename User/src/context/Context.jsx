@@ -5,11 +5,11 @@ import { BASEURL } from "../variable/variables";
 export const Context = createContext();
 
 export default function ContextProvider({ children }) {
-    const [User, setUser] = useState({});
     const [Banners, setBanners] = useState([])
     const [Categorys, setCategorys] = useState([])
     const [Products, setProducts] = useState([])
     useEffect(() => {
+
         const ReadAllApi = [
             axios.get(`${BASEURL}/banner`),
             axios.get(`${BASEURL}/category`),
@@ -19,25 +19,33 @@ export default function ContextProvider({ children }) {
         // res.data.status ? setBanners(res.data.Item) : setBanners([])
         // res.data.status ?resolve(res.data):reject(res.data)
 
-
         Promise.all(ReadAllApi)
             .then((Apidata) => {
+                console.log(Apidata);
+
                 const [Banner, Category, Product] = Apidata
                 setBanners(Banner.data.Item)
                 setCategorys(Category.data.Item)
-                setProducts(Product.data.Items)
+                setProducts(Product.data.Item)
+
             })
             .catch(e => console.log(e.message))
-
     }, [])
 
+    
 
+
+    const NumberToString = (Price) => {
+        return Price.toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
     const value = {
-        User,
-        setUser,
         Banners,
         Categorys,
-        Products
+        Products,
+        NumberToString,
     }
     return (
         <Context.Provider value={value}>

@@ -7,6 +7,8 @@ const CategoryRouter =require("./Rutes/Category.js");
 const ProductRoute = require("./Rutes/Product.js");
 const db = require("./DB/db.js");
 const dotenv=require('dotenv');
+const CartRoute = require("./Rutes/Cart.js");
+const LikeRoute = require("./Rutes/Like.js");
 
 require('./Auth/Google.js')
 require('./Auth/Facebook.js')
@@ -34,6 +36,8 @@ app.use('/admin', AdminRoute)
 app.use('/banner', BannerRouter)
 app.use('/category',CategoryRouter)
 app.use('/product',ProductRoute)
+app.use('/cart',CartRoute)
+app.use('/like',LikeRoute)
 
 app.use("/image", express.static("uploads"));
 

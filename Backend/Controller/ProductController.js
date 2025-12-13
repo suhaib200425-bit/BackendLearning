@@ -12,8 +12,8 @@ exports.addproduct = async (req, res) => {
 
         const { category, name, price, description } = req.body
         const admin_id = req.user.id;
-        const productsquery = 'INSERT INTO products ( admin_id, category, name, price, description) VALUES (?,?,?,?,?)'
-        db.query(productsquery, [admin_id, category, name, price, description], (err, result) => {
+        const productsquery = 'INSERT INTO products ( admin_id, category, name, price, description,stock) VALUES (?,?,?,?,?,?)'
+        db.query(productsquery, [admin_id, category, name, price, description, true], (err, result) => {
             if (err) return res.json({ status: false, message: err.message, Error: err })
 
             if (!result.affectedRows) return res, json({ status: false, message: 'Product Do Not Added' })
@@ -132,8 +132,8 @@ exports.updateproduct = async (req, res) => {
         const docid = req.params.id
         const admin_id = req.user.id
         const { category, name, price, description } = req.body
-        const ProductUdateQuery = ` UPDATE products SET admin_id=? , category = ?, name = ?, price = ?, description = ? WHERE id = ?`
-        db.query(ProductUdateQuery, [admin_id, category, name, price, description, docid], (err, updateproduct) => {
+        const ProductUdateQuery = ` UPDATE products SET admin_id=? , category = ?, name = ?, price = ?, description = ?, stock = ? WHERE id = ?`
+        db.query(ProductUdateQuery, [admin_id, category, name, price, description, true, docid], (err, updateproduct) => {
             if (err) return res.json({ status: false, message: "1" + err.message, Error: err })
             if (!updateproduct.affectedRows) return res.json({ status: false, message: 'Products not found' })
             const productimagesquery = 'INSERT INTO product_images (product_id, image_path) VALUES (?,?)'
@@ -143,7 +143,7 @@ exports.updateproduct = async (req, res) => {
                     if (err5) console.log(err5);
                 });
             })
-            db.query('SELECT * FROM products INNER JOIN product_images ON products.id = product_images.product_id  WHERE products.id=?', [docid], (err2, result) => {
+            db.query('SELECT * FROM products INNER JOIN product_images ON products.id = product_images.product_id WHERE products.id=?', [docid], (err2, result) => {
                 if (err2) return res.json({ status: false, message: 'err2' + err2.message, Error: err2 })
 
                 let addedproduct = {};  // map of products
@@ -174,4 +174,36 @@ exports.updateproduct = async (req, res) => {
     } catch (err) {
         res.json({ status: false, message: err.message })
     }
-} 
+}
+
+exports.getsignleproduct = async (req, res) => {
+    const docname = req.params.name 
+    const getproductsquery = 'SELECT * FROM products INNER JOIN product_images ON products.id = product_images.product_id WHERE products.name=?'
+    db.query(getproductsquery, [docname], (err2, result) => {
+        if (err2) return res.json({ status: false, message: 'err2' + err2.message, Error: err2 })
+
+        let addedproduct = {};  // map of products
+        result.forEach(row => {
+            if (!addedproduct[docname]) {
+                addedproduct[docname] = {
+                    id: row.product_id,
+                    admin_id: row.admin_id,
+                    category: row.category,
+                    name: row.name,
+                    price: row.price,
+                    description: row.description,
+                    image: []
+                };
+            }
+
+            if (row.image_path && row.id) {
+                addedproduct[docname].image.push({
+                    id: row.id,
+                    image_path: row.image_path
+                });
+            }
+
+        });
+        res.json({ status: true, message: "Product Availble", Item: addedproduct[docname] })
+    })
+}

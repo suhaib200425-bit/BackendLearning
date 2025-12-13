@@ -1,0 +1,12 @@
+.Group{
+    display: flex;
+    flex-direction: column;
+    gap: 20;
+    align-items: center;
+    
+}
+.Group img{
+    width: 120px;
+    height: 120px;
+    border-radius: 50px;
+}
