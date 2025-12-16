@@ -1,10 +1,7 @@
 
-const { log } = require('console');
 const db = require('../DB/db.js');
-const ProductModel = require('../Models/ProductModel.js')
 const fs = require("fs");
 const { json } = require('stream/consumers');
-const { toNamespacedPath } = require('path');
 
 exports.addproduct = async (req, res) => {
     try {
@@ -207,3 +204,38 @@ exports.getsignleproduct = async (req, res) => {
         res.json({ status: true, message: "Product Availble", Item: addedproduct[docname] })
     })
 }
+
+
+
+exports.getsignleproductwithid = async (req, res) => {
+    const docid = req.params.id 
+    const getproductsquery = 'SELECT * FROM products INNER JOIN product_images ON products.id = product_images.product_id WHERE products.id=?'
+    db.query(getproductsquery, [docid], (err2, result) => {
+        if (err2) return res.json({ status: false, message: 'err2' + err2.message, Error: err2 })
+
+        let addedproduct = {};  // map of products
+        result.forEach(row => {
+            if (!addedproduct[docid]) {
+                addedproduct[docid] = {
+                    id: row.product_id,
+                    admin_id: row.admin_id,
+                    category: row.category,
+                    name: row.name,
+                    price: row.price,
+                    description: row.description,
+                    image: []
+                };
+            }
+
+            if (row.image_path && row.id) {
+                addedproduct[docid].image.push({
+                    id: row.id,
+                    image_path: row.image_path
+                });
+            }
+
+        });
+        res.json({ status: true, message: "Product Availble", Item: addedproduct[docid] })
+    })
+}
+

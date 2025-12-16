@@ -1,0 +1,54 @@
+.display_like_items .like_item {
+    height: 89vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    margin-top: 1vh;
+}
+
+.like_item div {
+    margin-bottom: 5px;
+    display: flex;
+}
+
+.like_item div .Product {
+    height: 150px;
+    display: flex;
+    gap: 20px;
+}
+
+.like_item div .Product img {
+    height: 100%;
+    width: 200px;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.PRODUCT_TEXT {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+.like_item div .Quantity{
+    display: flex;
+    align-items: center;
+}
+
+.like_item div .Total{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.PRODUCT_TEXT p {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-weight: 300;
+}
+.Total .UlLike{
+    display: flex;
+    flex-direction: column;
+}

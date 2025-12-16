@@ -1,0 +1,119 @@
+.Address {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  background-color: transparent;
+  backdrop-filter: blur(8px);
+}
+
+.address-form-normal {
+  animation: slideRightToLeft 0.3s ease-out forwards;
+}
+@keyframes slideRightToLeft {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(2%);
+    opacity: 1;
+  }
+}
+@keyframes slideLeftToRight {
+  from {
+    transform: translateX(0%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+}
+.address_scroll_bar{
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+.current_elem_address{
+  background-color: #333;
+  width: 350px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid gray;
+}
+.address-form {
+
+  max-width: 450px;
+  height: 90vh;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.address-form h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.address-form input,
+.address-form textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.address-form textarea {
+  resize: none;
+  min-height: 80px;
+}
+
+.address-form input:focus,
+.address-form textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.address-form input[readonly] {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.address-form button {
+  margin-top: 10px;
+  padding: 12px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease, transform 0.1s ease;
+}
+
+.address-form button:hover {
+  background: #1e40af;
+}
+
+.address-form button:active {
+  transform: scale(0.98);
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .address-form {
+    margin: 20px;
+    padding: 20px;
+  }
+}

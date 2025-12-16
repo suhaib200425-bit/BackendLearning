@@ -9,6 +9,7 @@ const db = require("./DB/db.js");
 const dotenv=require('dotenv');
 const CartRoute = require("./Rutes/Cart.js");
 const LikeRoute = require("./Rutes/Like.js");
+const AddressRoute = require("./Rutes/address.js");
 
 require('./Auth/Google.js')
 require('./Auth/Facebook.js')
@@ -38,6 +39,7 @@ app.use('/category',CategoryRouter)
 app.use('/product',ProductRoute)
 app.use('/cart',CartRoute)
 app.use('/like',LikeRoute)
+app.use('/address',AddressRoute)
 
 app.use("/image", express.static("uploads"));
 

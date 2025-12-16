@@ -6,12 +6,14 @@ import { BASEURL } from '../../variable/variables';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { CartImage } from '../../assets/assets.js';
+import Empty from '../../Component/Empty/Empty.jsx';
 function Cart() {
     const token = localStorage.getItem('token')
     const [CartItems, setCartItems] = useState([])
     const [GrandTotal, setGrandTotal] = useState(0)
     const [counter, setcounter] = useState([])
-    const { NumberToString, } = useContext(Context)
+    const { NumberToString } = useContext(Context)
+    const [Purchase, setPurchase] = useState(false)
     useEffect(() => {
         const getcartitem = async () => {
             const res = await axios.get(`${BASEURL}/cart`, { headers: { Authorization: `Bearer ${token}` } })
@@ -60,8 +62,10 @@ function Cart() {
         return NumberToString(total)
     }
 
-    const removecartitem = (Index, CartId, Rate) => {
-        const total = counter[Index][CartId] * Rate
+    const removecartitem = async(Index, CartId, Rate) => {
+        const res = await axios.delete(`${BASEURL}/cart/delete/${CartId}`)
+        if(res.data.status){
+            const total = counter[Index][CartId] * Rate
         setGrandTotal(prev => prev - total)
         const FilterCartItems = CartItems.filter(elem => { return elem.id !== CartId });
         const Filtercounter = counter.filter(elem => {
@@ -74,6 +78,7 @@ function Cart() {
 
         setCartItems(FilterCartItems)
         setcounter(Filtercounter)
+        }
     }
     return (
         <div className='container'>
@@ -105,7 +110,7 @@ function Cart() {
                                             <div className='col-3 Quantity' onClick={() => console.log(counter)}>
                                                 <div className="">
                                                     <button className='' onClick={() => {
-                                                        if (counter[index][element.id]>1) {
+                                                        if (counter[index][element.id] > 1) {
                                                             setGrandTotal(prev => prev - element.product.price)
                                                             lesscounter(element.id)
                                                         }
@@ -151,11 +156,42 @@ function Cart() {
                         </div>
                     </div>
                     <div className="col-5 ps-5 payment_box">
-                        <div className="Cartimage">
-                            <img src={CartImage} alt="" srcset="" />
-                        </div>
+                        {
+                            !Purchase ?
+                                <div className="Cartimage">
+                                    <img src={CartImage} alt="" srcset="" />
+                                    <button onClick={()=>setPurchase(true)}>Purchase</button>
+                                </div>
+                                :
+                                <div className="col-12 back_buy">
+                                    <h4 className='byunow_hed'>Price Details </h4>
+
+                                    <div className="col-12 mt-3 mb-2 border"></div>
+                                    <div className="buyspe">
+                                        <h5>Total Product Price</h5>
+                                        <h5> {NumberToString(GrandTotal)}</h5>
+                                    </div>
+                                    <div className="buyspe">
+                                        <h5>Delivery Charge</h5>
+                                        <h5> {NumberToString(40)}</h5>
+                                    </div>
+                                    <div className="col-12 border mb-4"></div>
+                                    <div className="buyspe">
+                                        <h5>Total Amount</h5>
+                                        <h5> {NumberToString(GrandTotal + 40)}</h5>
+                                    </div>
+                                    <label htmlFor="" style={{ fontSize: '12px' }}>Clicking on 'Continue' will not deduct any money</label>
+                                    <div className="col-12 buybtn">
+                                        <button>Continue</button>
+                                    </div>
+                                    <div className="BUYIMAGE col-12">
+                                        <img src="https://i.pinimg.com/736x/4b/c5/a8/4bc5a864bc7cb0cffbee7b40e28f7c02.jpg" alt="" srcset="" />
+                                    </div>
+                                </div>
+                        }
+
                     </div>
-                </div> : <></>
+                </div> : <Empty />
             }
         </div>
     )

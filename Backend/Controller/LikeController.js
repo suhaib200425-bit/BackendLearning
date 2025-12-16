@@ -10,8 +10,8 @@ exports.addtolike = (req, res) => {
         if (err1) return res.json({ status: false, message: err1.message, ERROR_1: err1 })
 
         if (result1.length != 0) return res.json({ status: false, message: 'allready existed' })
-        addcartquery = `INSERT INTO likes (user_id, product_id) VALUES (?,?)`
-        db.query(addcartquery, [UserId, ProductId], (err2, result2) => {
+        addlikequery = `INSERT INTO likes (user_id, product_id) VALUES (?,?)`
+        db.query(addlikequery, [UserId, ProductId], (err2, result2) => {
             if (err2) return res.json({ status: false, message: err2.message, ERROR_2: err2 })
             res.json({ status: true, message: 'add like table;' })
         })
@@ -32,21 +32,20 @@ exports.getLike = (req, res) => {
     product_images.id AS image_id
     FROM likes
     INNER JOIN products ON likes.product_id = products.id
-    LEFT JOIN product_images ON products.id = product_images.product_id
+    INNER JOIN product_images ON products.id = product_images.product_id
     WHERE likes.user_id = ?
 `
     try {
-        db.query(likesitem, [userId], async (err, result) => {
+        db.query(likesitem, [userId],  (err, result) => {
             if (err) return res.json({ status: false, message: err.message, ERROR: err })
             if (result.length === 0) return res.json({ status: false, message: 'likes Item Is not Available' })
             // Group by likes id
-            let cartMap = {};
+            let likeMap = {};
 
             result.forEach(row => {
-                if (!cartMap[row.cart_id]) {
-                    cartMap[row.cart_id] = {
-                        id: row.cart_id,
-                        quantity: row.quantity,
+                if (!likeMap[row.like_id]) {
+                    likeMap[row.like_id] = {
+                        id: row.like_id,
                         product: {
                             id: row.product_id,
                             category: row.category,
@@ -58,7 +57,7 @@ exports.getLike = (req, res) => {
                     };
                 }
 
-                cartMap[row.cart_id].product.image.push({
+                likeMap[row.like_id].product.image.push({
                     id: row.image_id,
                     image_path: row.image_path
                 });
@@ -66,12 +65,53 @@ exports.getLike = (req, res) => {
 
             res.json({
                 status: true,
-                message: "Cart loaded",
-                Item: Object.values(cartMap)
+                message: "like loaded",
+                Item: Object.values(likeMap)
             });
         })
 
-    } catch (err6) {
-        return res.json({ status: false, message: err6.message })
+    } catch (err2) {
+        return res.json({ status: false, message: err2.message })
     }
 }
+
+
+
+exports.deleteLike = (req, res) => {
+  const { id } = req.params;
+
+  // 1️⃣ validation
+  if (!id) {
+    return res.json({
+      status: false,
+      message: "Like ID is required"
+    });
+  }
+
+  const query = "DELETE FROM `likes` WHERE id = ?";
+
+  db.query(query, [id], (err, result) => {
+    // 2️⃣ database error
+    if (err) {
+      console.error("DB Error:", err);
+      return res.json({
+        status: false,
+        message: "Database error"
+      });
+    }
+
+    // 3️⃣ id not found
+    if (result.affectedRows === 0) {
+      return res.json({
+        status: false,
+        message: "Like not found"
+      });
+    }
+
+    // 4️⃣ status
+    return res.json({
+      status: true,
+      message: "Like deleted successfully"
+    });
+  });
+};

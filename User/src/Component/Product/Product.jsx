@@ -6,13 +6,13 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 function Product({ text, id, size }) {
     const navigate = useNavigate()
-    const { Products, NumberToString} = useContext(Context)
-    const token = localStorage.getItem('token')
-    const AddToCart = async (Pid, Qty) => {
-        console.log('Pid=' + Pid + '\n' + 'Qty=' + Qty);
+    const { Products, NumberToString, AddToCart } = useContext(Context)
 
+
+    const Liked = async (ProductId) => {
+        const token = localStorage.getItem('token')
         const res = await axios.post(
-            `${BASEURL}/cart/add/${Pid}/${Qty}`,
+            `${BASEURL}/like/add/${ProductId}`,
             {},
             {
                 headers: {
@@ -21,6 +21,8 @@ function Product({ text, id, size }) {
             }
         )
         console.log(res.data);
+
+        !res.data.status && alert('Already Exist..')
     }
 
     return (
@@ -40,7 +42,11 @@ function Product({ text, id, size }) {
 
                         {
                             !size &&
-                            <div className="AddLike p-2">
+                            <div className="AddLike p-2" onClick={(event) => {
+                                event.stopPropagation()
+                                Liked(elem.id)
+                            }
+                            }>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
                                 </svg>
@@ -62,7 +68,7 @@ function Product({ text, id, size }) {
                                 <div className="Addcart" onClick={() => AddToCart(elem.id, 1)}>
                                     <button><strong>Add To Cart</strong></button>
                                 </div>
-                                <div className="Addcart">
+                                <div className="Addcart" onClick={() => navigate(`/buynow/${elem.id}`)}>
                                     <button style={{ backgroundColor: 'orange' }}><strong>Buy</strong></button>
                                 </div>
                             </div>

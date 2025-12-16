@@ -2,7 +2,7 @@
 import { BASEURL } from '../../variable/variables';
 import { useContext, useEffect, useState } from 'react';
 import { Context } from '../../context/Context';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './Item.css'
 import axios from 'axios';
 import NavBar from '../../Component/NavBar/NavBar';
@@ -12,7 +12,8 @@ function Item() {
   const [ITEM_RES, setITEM_RES] = useState({})
   const [rate, setrate] = useState('')
   const [mainimage, setmainimage] = useState('')
-  const { NumberToString } = useContext(Context)
+  const { NumberToString,AddToCart } = useContext(Context)
+  const navigate =useNavigate()
   useEffect(() => {
     window.scrollTo(0, 0);
     const getitem = async () => {
@@ -53,10 +54,10 @@ function Item() {
             <h5>{ITEM_RES.category}</h5>
             <p className='pb-3'>{ITEM_RES.description}</p>
             <div className="Buttons_Box_Item col-8">
-              <div className="Addcart">
+              <div className="Addcart" onClick={() => AddToCart(ITEM_RES.id, 1)}>
                 <button><strong>Add To Cart</strong></button>
               </div>
-              <div className="Addcart">
+              <div className="Addcart"  onClick={() => navigate(`/buynow/${ITEM_RES.id}`)}>
                 <button style={{ backgroundColor: 'orange' }}><strong>Buy Now</strong></button>
               </div>
             </div>

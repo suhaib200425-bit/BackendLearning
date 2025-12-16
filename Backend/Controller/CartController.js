@@ -121,3 +121,43 @@ exports.getCart = (req, res) => {
         return res.json({ status: false, message: err6.message })
     }
 }
+
+
+exports.deleteCart = (req, res) => {
+  const { id } = req.params;
+
+  // 1️⃣ validation
+  if (!id) {
+    return res.json({
+      status: false,
+      message: "Like ID is required"
+    });
+  }
+
+  const query = "DELETE FROM `carts` WHERE id = ?";
+
+  db.query(query, [id], (err, result) => {
+    // 2️⃣ database error
+    if (err) {
+      console.error("DB Error:", err);
+      return res.json({
+        status: false,
+        message: "Database error"
+      });
+    }
+
+    // 3️⃣ id not found
+    if (result.affectedRows === 0) {
+      return res.json({
+        status: false,
+        message: "Like not found"
+      });
+    }
+
+    // 4️⃣ status
+    return res.json({
+      status: true,
+      message: "Like deleted successfully"
+    });
+  });
+};

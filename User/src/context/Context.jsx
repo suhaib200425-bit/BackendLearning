@@ -8,6 +8,7 @@ export default function ContextProvider({ children }) {
     const [Banners, setBanners] = useState([])
     const [Categorys, setCategorys] = useState([])
     const [Products, setProducts] = useState([])
+    const token = localStorage.getItem('token')
     useEffect(() => {
 
         const ReadAllApi = [
@@ -32,8 +33,23 @@ export default function ContextProvider({ children }) {
             .catch(e => console.log(e.message))
     }, [])
 
-    
 
+    const AddToCart = async (Pid, Qty) => {
+        console.log('Pid=' + Pid + '\n' + 'Qty=' + Qty);
+
+        const token = localStorage.getItem('token')
+        const res = await axios.post(
+            `${BASEURL}/cart/add/${Pid}/${Qty}`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+        console.log(res.data);
+        !res.data.status && alert('Already Exist..')
+    }
 
     const NumberToString = (Price) => {
         return Price.toLocaleString("en-IN", {
@@ -45,7 +61,7 @@ export default function ContextProvider({ children }) {
         Banners,
         Categorys,
         Products,
-        NumberToString,
+        NumberToString, AddToCart
     }
     return (
         <Context.Provider value={value}>
