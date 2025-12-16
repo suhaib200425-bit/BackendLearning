@@ -5,9 +5,9 @@ import { useState } from 'react'
 import axios from 'axios'
 import { BASEURL } from '../../variable/variables.js'
 import { useNavigate } from 'react-router-dom'
-import { useContext } from 'react'
-import { Context } from '../../context/Context.jsx'
 function Auth() {
+
+
     const navigate = useNavigate()
     const [Form, setForm] = useState(false)
     const [User, setUser] = useState({})
@@ -27,11 +27,9 @@ function Auth() {
                 res.data.status && navigate('/home')
             } else {
                 if (User.password === User.confirm_password) {
-                    const res = await axios.post(`${BASEURL}/user/register`, User)
+                    const res = await axios.post(`${BASEURL}/user/send-otp`, User)
                     console.log(res.data);
-                    res.data.status && setForm(true)
-                    res.data.status && setUser({})
-                    setCartItem([])
+                    res.data.status && navigate(`/auth/otp/${User.email}`)
                 } else alert('Password Is Not Matched')
             }
         } catch (err) {
@@ -46,10 +44,11 @@ function Auth() {
             </div>
             <div className="col-6 image_auth_screen">
                 <div className="head head_border pb-2">
-                    <h1>{Form ? 'Register Now' : 'Login'}</h1>
+                        <h1>{Form ? 'Register Now' : 'Login'}</h1>
                     <p>Welcome {!Form && 'Back'} To ZEBRONICS.....</p>
                 </div>
                 <form onSubmit={handlesubmit} id='Formsubmition' className='head mt-4 pb-4'>
+
                     <div className="box pb-5 ">
                         {
                             Form && <>
@@ -77,6 +76,7 @@ function Auth() {
                             }}>Click</span></p>
                         </div>
                     </div>
+
                 </form>
             </div>
         </div>

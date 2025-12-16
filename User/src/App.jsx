@@ -8,6 +8,7 @@ import Cart from "./Page/Cart/Cart";
 import Like from "./Page/Like/Like";
 import Buynow from "./Page/BuyNow/Buynow";
 import AddressForm from "./Component/AddressForm/AddressForm";
+import OtpForm from "./Page/Otpform/OtpForm";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/" element={< Flash/>} />
       <Route path="/home" element={< Home/>} />
       <Route path="/auth" element={< Auth/>} />
+      <Route path="/auth/otp/:email" element={< OtpForm/>} />
       <Route path="home/:product" element={< Item/>} />
       <Route path="home/category/:item" element={< Group/>} />
       <Route path="/cart" element={< Cart/>} />
