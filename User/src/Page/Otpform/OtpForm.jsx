@@ -3,7 +3,7 @@ import "./otp.css";
 import { AuthScreen } from "../../assets/assets.js";
 import axios from "axios";
 import { BASEURL } from "../../variable/variables.js";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function OtpForm() {
     
@@ -11,6 +11,7 @@ function OtpForm() {
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const inputsRef = useRef([]);
     const [message, setmessage] = useState('')
+    const navigator=useNavigate()
 
     const handleChange = (value, index) => {
         if (!/^\d?$/.test(value)) return;
@@ -38,7 +39,8 @@ function OtpForm() {
             setmessage('')
             const res= await axios.post(`${BASEURL}/user/verifyOtp`,{'otp':Number(otpValue),'email':email})
             console.log(res.data);
-            
+            !res.data.status&& alert(res.data.message)
+            navigator('/auth')
         }
 
     }
